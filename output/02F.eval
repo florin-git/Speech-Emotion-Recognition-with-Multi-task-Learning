@@ -1,6 +1,8 @@
-05/14/2022 17:51:25 - WARNING - datasets.builder -   Using custom data configuration default-9ef159a007e235c8
-Downloading and preparing dataset csv/default to /home/florin/.cache/huggingface/datasets/csv/default-9ef159a007e235c8/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519...
-Dataset csv downloaded and prepared to /home/florin/.cache/huggingface/datasets/csv/default-9ef159a007e235c8/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519. Subsequent calls will reuse this data.
-05/14/2022 17:51:26 - WARNING - datasets.builder -   Using custom data configuration default-6b71df8f666bdac3
-Downloading and preparing dataset csv/default to /home/florin/.cache/huggingface/datasets/csv/default-6b71df8f666bdac3/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519...
-Dataset csv downloaded and prepared to /home/florin/.cache/huggingface/datasets/csv/default-6b71df8f666bdac3/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519. Subsequent calls will reuse this data.
+05/15/2022 22:46:45 - WARNING - datasets.builder -   Using custom data configuration default-694202e3c61339a3
+Downloading and preparing dataset csv/default to /home/florin/.cache/huggingface/datasets/csv/default-694202e3c61339a3/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519...
+Dataset csv downloaded and prepared to /home/florin/.cache/huggingface/datasets/csv/default-694202e3c61339a3/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519. Subsequent calls will reuse this data.
+05/15/2022 22:46:46 - WARNING - datasets.builder -   Using custom data configuration default-cfe7d15b55f9431a
+Downloading and preparing dataset csv/default to /home/florin/.cache/huggingface/datasets/csv/default-cfe7d15b55f9431a/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519...
+Dataset csv downloaded and prepared to /home/florin/.cache/huggingface/datasets/csv/default-cfe7d15b55f9431a/0.0.0/433e0ccc46f9880962cc2b12065189766fbb2bee57a221866138fb9203c83519. Subsequent calls will reuse this data.
+05/15/2022 22:47:17 - WARNING - __main__ -   Updated 505 transcript(s) using 'librispeech' orthography rules.
+correct: 418 , acc: 0.8277227722772277
