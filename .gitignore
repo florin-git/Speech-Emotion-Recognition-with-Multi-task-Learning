@@ -132,3 +132,5 @@ dmypy.json
 # Custom
 data/
 ckpts/
+notebooks/cache
+notebooks/wandb
