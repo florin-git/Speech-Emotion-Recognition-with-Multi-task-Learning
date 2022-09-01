@@ -134,3 +134,7 @@ data/
 ckpts/
 notebooks/cache
 notebooks/wandb
+notebooks/datasets
+notebooks/output/my_training
+notebooks/output/tmp
+

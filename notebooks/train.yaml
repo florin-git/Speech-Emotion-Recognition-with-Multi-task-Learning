@@ -1,0 +1,35 @@
+data_args:
+  dataset_name: emotion
+  split_id: 01M
+  orthography: librispeech
+  speech_file_column: file
+  target_text_column: text
+
+model_args:
+  model_name_or_path: facebook/wav2vec2-base
+  cache_dir: cache
+  alpha: 0.1
+  tokenizer: facebook/wav2vec2-base
+
+training_args:
+  output_dir: output/my_training
+  gradient_checkpointing: True
+  num_train_epochs: 3
+  
+  do_train: True
+  do_eval: True
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  evaluation_strategy: steps
+  save_total_limit: 1
+  save_steps: 500
+  eval_steps: 50
+  logging_steps: 50
+  logging_dir: log
+  learning_rate: 5e-5
+  gradient_accumulation_steps: 2 # batch size * acc = 8 
+  fp16: True
+  dataloader_num_workers: 0 
+
+  report_to: wandb
+  run_name: SER-test

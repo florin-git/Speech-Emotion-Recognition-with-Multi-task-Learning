@@ -1,12 +1,10 @@
-import warnings
-from typing import Optional, Tuple
-
 import torch
 import torch.nn.functional as F
 import torch.utils.checkpoint
 from transformers import Wav2Vec2Model, Wav2Vec2PreTrainedModel
 from transformers.modeling_outputs import CausalLMOutput
 from torch import nn
+
 
 class Wav2Vec2ForCTCnCLS(Wav2Vec2PreTrainedModel):
 
@@ -19,25 +17,24 @@ class Wav2Vec2ForCTCnCLS(Wav2Vec2PreTrainedModel):
         self.init_weights()
         self.alpha = alpha
 
-
     def freeze_feature_extractor(self):
         self.wav2vec2.feature_extractor._freeze_parameters()
-
 
     def _ctc_loss(self, logits, labels, input_values, attention_mask=None):
         loss = None
         if labels is not None:
 
-            # retrieve loss input_lengths from attention_mask
+            # Retrieve loss input_lengths from attention_mask
             attention_mask = (
-                attention_mask if attention_mask is not None else torch.ones_like(input_values, dtype=torch.long)
+                attention_mask if attention_mask is not None else torch.ones_like(
+                    input_values, dtype=torch.long)
             )
-            input_lengths = self._get_feat_extract_output_lengths(attention_mask.sum(-1))
+            input_lengths = self._get_feat_extract_output_lengths(
+                attention_mask.sum(-1))
 
-            # assuming that padded tokens are filled with -100
-            # when not being attended to
+            # Assuming that padded tokens are filled with -100
             labels_mask = labels >= 0
-            target_lengths = labels_mask.sum(-1)
+            target_lengths = labels_mask.sum(-1) # Pooling operation
             flattened_targets = labels.masked_select(labels_mask)
 
             log_probs = F.log_softmax(logits, dim=-1).transpose(0, 1)
@@ -51,17 +48,15 @@ class Wav2Vec2ForCTCnCLS(Wav2Vec2PreTrainedModel):
                     blank=self.config.pad_token_id,
                     reduction=self.config.ctc_loss_reduction,
                     zero_infinity=self.config.ctc_zero_infinity,
-                    )
+                )
 
         return loss
 
-
-    def _cls_loss(self, logits, cls_labels): # sum hidden_states over dim 1 (the sequence length), then feed into self.cls
+    def _cls_loss(self, logits, cls_labels):
         loss = None
         if cls_labels is not None:
             loss = F.cross_entropy(logits, cls_labels.to(logits.device))
         return loss
-
 
     def forward(
         self,
@@ -70,10 +65,10 @@ class Wav2Vec2ForCTCnCLS(Wav2Vec2PreTrainedModel):
         output_attentions=None,
         output_hidden_states=None,
         return_dict=None,
-        labels=None, # tuple: (ctc_labels, cls_labels), shape=(batch_size, target_length)
+        labels=None,# tuple: (ctc_labels, cls_labels), shape=(batch_size, target_length)
         if_ctc=True,
         if_cls=True,
-        ):
+    ):
 
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
@@ -85,27 +80,24 @@ class Wav2Vec2ForCTCnCLS(Wav2Vec2PreTrainedModel):
             return_dict=return_dict,
         )
 
-        hidden_states = outputs[0] # this is the last layer's hidden states
+        hidden_states = outputs[0]  # this is the last layer's hidden states
         hidden_states = self.dropout(hidden_states)
 
         logits_ctc = self.lm_head(hidden_states)
-        logits_cls = self.cls_head(torch.mean(hidden_states, dim=1))
+        
+        logits_cls = self.cls_head(torch.mean(hidden_states, dim=1)) # dim 1 is the sequence length
 
         loss = None
         if labels is not None:
             if if_ctc:
-                loss_ctc = self._ctc_loss(logits_ctc, labels[0], input_values, attention_mask)
+                loss_ctc = self._ctc_loss(
+                    logits_ctc, labels[0], input_values, attention_mask)
             if if_cls:
                 loss_cls = self._cls_loss(logits_cls, labels[1])
 
             loss = loss_cls + self.alpha * loss_ctc
 
-        # if not return_dict:
-        #     output = (logits,) + outputs[1:]
-        #     return ((loss,) + output) if loss is not None else output
-
         return CausalLMOutput(
-            loss=loss, logits=(logits_ctc, logits_cls), hidden_states=outputs.hidden_states, attentions=outputs.attentions
+            loss=loss, logits=(
+                logits_ctc, logits_cls), hidden_states=outputs.hidden_states, attentions=outputs.attentions
         )
-
-        

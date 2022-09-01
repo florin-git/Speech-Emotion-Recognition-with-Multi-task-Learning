@@ -1,0 +1,34 @@
+data_args:
+  dataset_name: emotion
+  split_id: 02F
+  orthography: librispeech
+  speech_file_column: file
+  target_text_column: text
+
+model_args:
+  model_name_or_path: ckpts/02F
+  cache_dir: cache
+  alpha: 0.1
+  tokenizer: facebook/wav2vec2-base
+
+training_args:
+  output_dir: output/reproduce/02F
+  overwrite_output_dir: True
+  
+  gradient_checkpointing: True
+  num_train_epochs: 3
+  warmup_ratio: 0.1
+
+  do_eval: True
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 1  
+  evaluation_strategy: steps
+  save_total_limit: 1
+  save_steps: 500
+  eval_steps: 5
+  logging_steps: 5
+  logging_dir: log
+  learning_rate: 0.1
+  fp16: True
+  dataloader_num_workers: 0 
